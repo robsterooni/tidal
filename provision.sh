@@ -1,5 +1,7 @@
 #!/bin/bash
 
+apt --yes install /usr/share/tidal/*.deb
+
 cat << EOF > /etc/modprobe.d/blacklist-snd_bcm2835.conf
 blacklist snd_bcm2835
 EOF

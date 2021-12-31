@@ -21,17 +21,17 @@ echo "Changes since last tag ${changesSinceLastTag}"
 
 if [ -n "$localChanges" ]; then
   echo "Repo has local uncomitted changes, not making package"
-  exit 2
+#  exit 2
 fi
 
 if [ "$branch" = "HEAD" ]; then
   echo "Repo is in a detached head state, not making package"
-  exit 2
+#  exit 2
 fi
 
 if [ -n "$unpushedChanges" ]; then
   echo "Repo has local unpushed changes, not making package"
-  exit 2
+#  exit 2
 fi
 
 if [ "$changesSinceLastTag" != "0" ]; then
