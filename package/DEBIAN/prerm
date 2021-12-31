@@ -1,0 +1,10 @@
+#!/bin/bash
+
+deb-systemd-invoke stop tidal.service > /dev/null || true
+deb-systemd-invoke disable tidal.service > /dev/null || true
+
+#rm -rf /var/maul-manage
+
+
+
+
