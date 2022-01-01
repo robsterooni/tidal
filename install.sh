@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ "$EUID" -ne 0 ]
+  then echo "Please run as root"
+  exit
+fi
+
 script=$(readlink -f $0)
 scriptPath=$(dirname $script)
 
@@ -30,25 +35,6 @@ cp -r ifi-tidal-release /usr/ifi/
 
 # copy service file
 cp $scriptPath/tidal.service /lib/systemd/system/
-
-# override default service file with NAD amp settings
-mkdir -p /etc/systemd/system/tidal.service.d/
-cat << EOF > /etc/systemd/system/tidal.service.d/override.conf
-[Service]
-ExecStart=
-ExecStart=/usr/ifi/ifi-tidal-release/bin/tidal_connect_application \
-   --tc-certificate-path "/usr/ifi/ifi-tidal-release/id_certificate/IfiAudio_ZenStream.dat" \
-   --friendly-name "NAD" \
-   --codec-mpegh true \
-   --codec-mqa true \
-   --model-name "NAD" \
-   --disable-app-security false \
-   --disable-web-security false \
-   --enable-mqa-passthrough true \
-   --log-level 3 \
-   --enable-websocket-log "0" \
-   --playback-device "NAD USB Audio: - (hw:1,0)"
-EOF
 
 systemctl daemon-reload
 systemctl enable tidal
