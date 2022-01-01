@@ -34,10 +34,9 @@ mkdir -p /usr/ifi
 cp -r ifi-tidal-release /usr/ifi/
 
 # copy service file
-cp $scriptPath/services/* /lib/systemd/system/
+cp $scriptPath/services/tidal* /lib/systemd/system/
 
 systemctl daemon-reload
-#systemctl enable tidal
 systemctl enable tidal-watchdog.timer
 systemctl start  tidal-watchdog.timer
 
