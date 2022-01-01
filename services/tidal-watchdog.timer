@@ -1,0 +1,18 @@
+[Unit]
+Description=Calls tidal-watchdog
+Requires=tidal-watchdog.service
+
+[Timer]
+Unit=tidal-watchdog.service
+OnCalendar=*-*-* *:*:0/5
+AccuracySec=1s
+
+[Install]
+WantedBy=timers.target
+
+
+
+
+
+
+
