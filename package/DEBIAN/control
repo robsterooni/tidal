@@ -1,8 +1,0 @@
-Package: NAME
-Version: VERSION
-Priority: optional
-Architecture: ARCH
-Essential: no
-Maintainer: Robin <robsterooni@gmail.com>
-Description: Tidal Connect service
-Depends: libportaudio2, libflac++6v5, libavahi-common3, libavahi-client3, alsa-utils

@@ -1,9 +1,0 @@
-#!/bin/bash
-
-#mkdir -p /var/maul-manage
-#chmod 700 /var/maul-manage
-
-deb-systemd-invoke enable tidal.service > /dev/null || true
-deb-systemd-invoke start  tidal.service > /dev/null || true
-
-
