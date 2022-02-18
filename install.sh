@@ -33,13 +33,18 @@ EOF
 mkdir -p /usr/ifi
 cp -r ifi-tidal-release /usr/ifi/
 
-# copy service file
+# copy service files
 cp $scriptPath/services/tidal* /lib/systemd/system/
+
+mkdir -p /etc/systemd/system/tidal.service.d/
+cp $scriptPath/services/override/tidal-$1.conf /etc/systemd/system/tidal.service.d/override.conf
+
+mkdir -p /etc/systemd/system/tidal-watchdog.service.d/
+cp $scriptPath/services/override/tidal-watchdog-$1.conf /etc/systemd/system/tidal-watchdog.service.d/override.conf
 
 systemctl daemon-reload
 systemctl enable tidal-watchdog.timer
 systemctl start  tidal-watchdog.timer
-
 
 echo "You should probably reboot"
 

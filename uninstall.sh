@@ -29,8 +29,9 @@ rm /etc/modprobe.d/blacklist-vc4.conf
 # rm proggy files
 rm -rf /usr/ifi
 
-# copy service file
+# rm service file
 rm /lib/systemd/system/tidal*
+rm -r /etc/systemd/system/tidal*
 
 echo "You should probably reboot"
 
