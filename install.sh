@@ -20,28 +20,32 @@ apt --yes install $scriptPath/deb/*
 
 
 # blacklist 3.5mm analogue output
-cat << EOF > /etc/modprobe.d/blacklist-snd_bcm2835.conf
-blacklist snd_bcm2835
-EOF
+#cat << EOF > /etc/modprobe.d/blacklist-snd_bcm2835.conf
+#blacklist snd_bcm2835
+#EOF
 
 # blacklist HDMI audio out
-cat << EOF > /etc/modprobe.d/blacklist-vc4.conf
-blacklist vc4
-EOF
+#cat << EOF > /etc/modprobe.d/blacklist-vc4.conf
+#blacklist vc4
+#EOF
 
 # copy prog files
 mkdir -p /usr/ifi
 cp -r ifi-tidal-release /usr/ifi/
 
-# copy service files
-cp $scriptPath/services/tidal* /lib/systemd/system/
+# copy service file
+cp $scriptPath/services/* /lib/systemd/system/
 
-mkdir -p /etc/systemd/system/tidal.service.d/
-cp $scriptPath/services/override/tidal-$1.conf /etc/systemd/system/tidal.service.d/override.conf
+# copy config file
+mkdir -p /etc/tidal
+cp $scriptPath/config/* /etc/tidal/
+
+# copy scripts
+cp $scriptPath/scripts/* /usr/bin/
 
 systemctl daemon-reload
 systemctl enable tidal-watchdog.timer
 systemctl start  tidal-watchdog.timer
 
-echo "You should probably reboot"
+
 

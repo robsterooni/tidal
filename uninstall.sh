@@ -10,6 +10,7 @@ scriptPath=$(dirname $script)
 
 systemctl stop tidal-watchdog.timer
 systemctl disable tidal-watchdog.timer
+systemctl stop tidal.service
 
 
 # add old stretch repo for old debs
@@ -21,17 +22,15 @@ apt update
 #apt --yes autoremove
 
 # blacklist 3.5mm analogue output
-rm /etc/modprobe.d/blacklist-snd_bcm2835.conf
+#rm /etc/modprobe.d/blacklist-snd_bcm2835.conf
 
 # blacklist HDMI audio out
-rm /etc/modprobe.d/blacklist-vc4.conf
+#rm /etc/modprobe.d/blacklist-vc4.conf
 
 # rm proggy files
 rm -rf /usr/ifi
-
-# rm service file
 rm /lib/systemd/system/tidal*
-rm -r /etc/systemd/system/tidal*
+rm /usr/bin/tidal*
+rm -rf /etc/tidal
 
-echo "You should probably reboot"
 

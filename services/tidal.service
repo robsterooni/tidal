@@ -1,12 +1,14 @@
 [Unit]
 Description=Tidal Connect Service
-StartLimitIntervalSec=0
+#StartLimitIntervalSec=0
 
 [Service]
-Restart=on-failure
+#Restart=on-failure
+ExecStart=/usr/bin/tidal.sh
+
 User=root
 Group=root
-RestartSec=5
+#RestartSec=5
 KillMode=control-group
 
 [Install]
