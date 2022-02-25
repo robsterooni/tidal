@@ -1,8 +1,1 @@
-{
-    "modelName": "RPi4 bcm2835",
-    "friendlyName": "Pi Headphones",
-    "codecMPEGH": "true",
-    "codecMQA": "true",
-    "passthroughMQA": "false",
-    "playbackDevice": "bcm2835 Headphones: - (hw:0,0)"
-}
+backup/config.json.nad

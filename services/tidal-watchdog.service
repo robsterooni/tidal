@@ -1,5 +1,5 @@
 [Unit]
-Description=Tidal Connect Watchdog services. Stops and starts tidal when amp goes off and on
+Description=Tidal Connect Watchdog services. Stops and starts tidal when device is connected/disconnected
 Wants=tidal-watchdog.timer
 
 [Service]

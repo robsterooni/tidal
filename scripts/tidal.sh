@@ -3,19 +3,19 @@
 script=$(readlink -f $0)
 scriptPath=$(dirname $script)
 
-jsonConfig=/etc/tidal/config.json
+configFile=/etc/tidal/config.json
 
-if [ ! -f $jsonConfig ]; then
-    echo "<2>${jsonConfig} doesnt exist, leaving" 1>&2
+if [ ! -f $configFile ]; then
+    echo "<2>${configFile} doesnt exist, leaving" 1>&2
     exit 8
 fi
 
-modelName=$(jq --raw-output '.modelName' $jsonConfig)
-friendlyName=$(jq --raw-output '.friendlyName' $jsonConfig)
-codecMPEGH=$(jq --raw-output '.codecMPEGH' $jsonConfig)
-codecMQA=$(jq --raw-output '.codecMQA' $jsonConfig)
-passthroughMQA=$(jq --raw-output '.passthroughMQA' $jsonConfig)
-playbackDevice=$(jq --raw-output '.playbackDevice' $jsonConfig)
+modelName=$(jq --raw-output '.modelName' $configFile)
+friendlyName=$(jq --raw-output '.friendlyName' $configFile)
+codecMPEGH=$(jq --raw-output '.codecMPEGH' $configFile)
+codecMQA=$(jq --raw-output '.codecMQA' $configFile)
+passthroughMQA=$(jq --raw-output '.passthroughMQA' $configFile)
+playbackDevice=$(jq --raw-output '.playbackDevice' $configFile)
 
 
 echo "<6>config : modelName($modelName)"
