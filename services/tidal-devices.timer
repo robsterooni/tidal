@@ -1,6 +1,6 @@
 [Unit]
 Description=Calls tidal-devices
-Requires=tidal-timer.service
+Requires=tidal-devices.service
 
 [Timer]
 Unit=tidal-devices.service

@@ -9,14 +9,19 @@ configFile=/etc/tidal/config.json
 devicesFile=/var/tidal/devices.json
 
 if [ ! -f $configFile ] ; then
-  echo "<2>configFile(${configFile}) does not exist, stopping tidal and leaving with error" 1>&2
+  if [ $? -eq 0 ]; then
+    echo "<2>configFile(${configFile}) does not exist.  Tidal is running and it needs to stop" 1>&2
+    systemctl stop tidal
+  fi
   systemctl stop tidal
   exit 2
 fi
 
 if [ ! -f $devicesFile ] ; then
-  echo "<5>devicesFile(${devicesFile}) does not exist, you may have no devices connected.  stopping tidal and leaving without error" 1>&2
-  systemctl stop tidal
+  if [ $? -eq 0 ]; then
+    echo "<3>devicesFile(${devicesFile}) does not exist, you may have no devices connected.  Tidal is running and it needs to stop" 1>&2
+    systemctl stop tidal
+  fi
   exit 0
 fi
 
@@ -26,13 +31,20 @@ devices=$(jq -r '.[]' < $devicesFile)
 
 while read line; do
   if [[ $line == $playbackDevice ]]; then
-    echo "<6>Yes! Found configured playbackDevice($playbackDevice), starting tidal and leaving without error (it might already be running, btw)"
-    systemctl start tidal
+    systemctl is-active --quiet tidal
+    if [ $? -ne 0 ]; then
+      echo "<5>Tidal is not currently running and it needs to start, running with playbackDevice($playbackDevice)"
+      systemctl start tidal
+    fi
     exit 0
   fi
 done <<< "$devices"
 
-echo "<5>We got this far without finding configured playbackDevice($playbackDevice) currently connected, stopping tidal and leaving without error"
-systemctl stop tidal
+
+if [ $? -eq 0 ]; then
+  echo "<5>playbackDevice($playbackDevice) is not connected.  Tidal is running and it needs to stop"
+  systemctl stop tidal
+fi
+
 exit 0
 

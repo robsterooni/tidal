@@ -1,0 +1,9 @@
+{
+    "modelName": "NAD D3045",
+    "friendlyName": "NAD Amp - Office",
+    "codecMPEGH": "true",
+    "codecMQA": "true",
+    "passthroughMQA": "true",
+    "playbackDevice": "NAD USB Audio: - (hw:1,0)"
+}
+
