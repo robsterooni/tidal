@@ -15,6 +15,7 @@ deb http://archive.raspbian.org/raspbian stretch main
 EOF
 apt update
 
+apt --yes install jo jq
 apt --yes install multiarch-support libavformat57 libportaudio2 libflac++6v5 libavahi-common3 libavahi-client3 alsa-utils
 apt --yes install $scriptPath/deb/*
 
@@ -43,7 +44,14 @@ cp $scriptPath/config/* /etc/tidal/
 # copy scripts
 cp $scriptPath/scripts/* /usr/bin/
 
+# devices file will be written here
+mkdir -p /var/tidal
+
 systemctl daemon-reload
+
+systemctl enable tidal-devices.timer
+systemctl start  tidal-devices.timer
+
 systemctl enable tidal-watchdog.timer
 systemctl start  tidal-watchdog.timer
 

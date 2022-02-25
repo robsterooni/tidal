@@ -8,8 +8,12 @@ fi
 script=$(readlink -f $0)
 scriptPath=$(dirname $script)
 
+systemctl stop tidal-devices.timer
+systemctl disable tidal-devices.timer
+
 systemctl stop tidal-watchdog.timer
 systemctl disable tidal-watchdog.timer
+
 systemctl stop tidal.service
 
 
@@ -32,5 +36,7 @@ rm -rf /usr/ifi
 rm /lib/systemd/system/tidal*
 rm /usr/bin/tidal*
 rm -rf /etc/tidal
+rm -rf /var/tidal
+
 
 

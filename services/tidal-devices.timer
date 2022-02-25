@@ -1,0 +1,18 @@
+[Unit]
+Description=Calls tidal-devices
+Requires=tidal-timer.service
+
+[Timer]
+Unit=tidal-devices.service
+OnCalendar=*-*-* *:*:0/3
+AccuracySec=1s
+
+[Install]
+WantedBy=timers.target
+
+
+
+
+
+
+

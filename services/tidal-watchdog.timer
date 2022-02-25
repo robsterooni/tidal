@@ -4,7 +4,7 @@ Requires=tidal-watchdog.service
 
 [Timer]
 Unit=tidal-watchdog.service
-OnCalendar=*-*-* *:*:0/5
+OnCalendar=*-*-* *:*:0/4
 AccuracySec=1s
 
 [Install]

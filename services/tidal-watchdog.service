@@ -1,6 +1,7 @@
 [Unit]
-Description=Tidal Connect NAD AMP Watchdog services. Stops and starts tidal when amp goes off and on
+Description=Tidal Connect Watchdog services. Stops and starts tidal when amp goes off and on
 Wants=tidal-watchdog.timer
+ConditionPathExists=/etc/tidal/config.json
 
 [Service]
 Type=oneshot
