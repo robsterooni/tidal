@@ -140,7 +140,7 @@ MainMenu() {
 
 
   result=$(dialog --stdout \
-    --backtitle "Tidal Connection Config Utility" \
+    --backtitle "Tidal Connect Configuration Utility" \
     --no-collapse  --default-item 5 --no-cancel \
     --menu "$msg" 0 0 0 \
     1 "Configure" \
