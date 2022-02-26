@@ -105,7 +105,7 @@ MainMenu() {
     devices=$(jq -r '.[]' < $devicesFile)
     msg+=$devices
   else
-    msg+="No devices found!"
+    msg+="No devices found!"$'\n'
   fi
   msg+=$'\n\n'
 
@@ -126,15 +126,16 @@ MainMenu() {
     msg+="Passthrough MQA : $passthroughMQA"$'\n'
     msg+="Playback Device : $playbackDevice"$'\n'
   else
-    msg+="No configuration found!"
+    msg+="No configuration found!"$'\n'
   fi
   msg+=$'\n'
 
   msg+=$'Status : Services\n-----------------\n'
   watchdogStatus=$(cat /var/tidal/tidal-watchdog.status)
   msg+="Tidal                 : "$(systemctl is-active tidal.service)$'\n'
-  msg+="Tidal Watchdog        : "$(systemctl is-active tidal-watchdog.timer)" => ${watchdogStatus}"$'\n'
-  msg+="Tidal Device Scanner  : "$(systemctl is-active tidal-devices.timer)$'\n'
+  msg+="Tidal Watchdog        : "$(systemctl is-active tidal-watchdog.timer)$'\n'
+  msg+="Tidal Device Scanner  : "$(systemctl is-active tidal-devices.timer)$'\n'  
+  msg+="Tidal Status          : ${watchdogStatus}"$'\n'
   msg+=$'\n\n'
 
 
