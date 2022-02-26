@@ -29,8 +29,8 @@ Restart() {
 
 
 Configure() {
-  modelName=$(dialog --stdout --inputbox "Model Name :" 0 0)
-  friendlyName=$(dialog --stdout --inputbox "Friendly Name :" 0 0)
+  modelName=$(dialog --stdout --no-cancel --inputbox "Model Name :" 0 0)
+  friendlyName=$(dialog --stdout --no-cancel --inputbox "Friendly Name :" 0 0)
 
   dialog --stdout --yesno "Decode MPEGH :" 0 0
   [[ $? = 0 ]] && codecMPEGH="true" || codecMPEGH="false"
@@ -65,7 +65,7 @@ Configure() {
       ((i=i+1))
     done <<< "$devices"
 
-    playbackDeviceIndex=$(dialog --stdout --radiolist "Playback Device :" 0 0 0 "${deviceOptions[@]}")
+    playbackDeviceIndex=$(dialog --stdout --no-cancel --no-tags --no-collapse --radiolist "Playback Device :" 0 0 0 "${deviceOptions[@]}")
     playbackDevice="${deviceArray[$playbackDeviceIndex]}"
 
     jo -p \
@@ -116,16 +116,19 @@ MainMenu() {
   else
     msg+="No configuration found!"
   fi
-  msg+=$'\n\n'
+  msg+=$'\n'
 #  msg+=$'Choose an Option :\n'
 
-  msg+=$'Status : Services\n-----------------------------\n'
-  
+  msg+=$'Status : Services\n-----------------\n'
+  msg+="Tidal                 : "$(systemctl is-active tidal.service)$'\n'
+  msg+="Tidal Watchdog        : "$(systemctl is-active tidal-watchdog.timer)$'\n'
+  msg+="Tidal Device Scanner  : "$(systemctl is-active tidal-devices.timer)$'\n'
   msg+=$'\n\n'
 
 
   result=$(dialog --stdout \
     --backtitle "Tidal Connection Config Utility" \
+    --no-collapse  --default-item 5 --no-cancel \
     --menu "$msg" 0 0 0 \
     1 "Configure" \
     2 "Start Services" \
@@ -134,7 +137,7 @@ MainMenu() {
     5 "Refresh Status" \
     6 "Exit" \
     )
-  
+
   case $result in
 	1) Configure;;
 	2) Start;;
