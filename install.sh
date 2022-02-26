@@ -43,7 +43,7 @@ fi
 
 # copy prog files
 mkdir -p /usr/ifi
-cp -r ifi-tidal-release /usr/ifi/
+cp -r $scriptPath/ifi-tidal-release /usr/ifi/
 
 # copy service file
 cp $scriptPath/services/* /lib/systemd/system/
