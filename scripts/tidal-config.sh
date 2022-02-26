@@ -15,12 +15,15 @@ trim() {
 Start() {
   systemctl start tidal-watchdog.timer
   systemctl start tidal-devices.timer
+  dialog --timeout 3 --no-cancel  --pause "Starting Services" 10 0 3
 }
 
 Stop() {
   systemctl stop tidal-devices.timer
   systemctl stop tidal-watchdog.timer
   systemctl stop tidal
+  rm -f /var/tidal/tidal-watchdog.status
+  dialog --timeout 3 --no-cancel  --pause "Stopping Services" 10 0 3
 }
 
 Restart() {
@@ -78,7 +81,8 @@ Configure() {
       passthroughMQA=$passthroughMQA \
       playbackDevice="${playbackDevice}" > /etc/tidal/config.json
 
-    dialog --msgbox "Configuration written to /etc/tidal/config.json" 0 0
+    Restart
+    dialog --msgbox "Configuration written to /etc/tidal/config.json and services have been restarted" 0 0
     return 0
   else
     dialog --msgbox "No devices found, configuration NOT changed" 0 0
@@ -119,11 +123,11 @@ MainMenu() {
     msg+="No configuration found!"
   fi
   msg+=$'\n'
-#  msg+=$'Choose an Option :\n'
 
   msg+=$'Status : Services\n-----------------\n'
+  watchdogStatus=$(cat /var/tidal/tidal-watchdog.status)
   msg+="Tidal                 : "$(systemctl is-active tidal.service)$'\n'
-  msg+="Tidal Watchdog        : "$(systemctl is-active tidal-watchdog.timer)$'\n'
+  msg+="Tidal Watchdog        : "$(systemctl is-active tidal-watchdog.timer)" : ${watchdogStatus}"$'\n'
   msg+="Tidal Device Scanner  : "$(systemctl is-active tidal-devices.timer)$'\n'
   msg+=$'\n\n'
 

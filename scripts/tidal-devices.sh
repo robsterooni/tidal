@@ -36,7 +36,6 @@ done <<< "$rawDevices"
 devices=$(trim "$devices")
 
 if [ -z "$devices" ]; then
-#  echo "<6> No devices found, removing $devicesFile"
   rm -f $devicesFile
 else
   echo "$devices" | jo -a > $devicesFile

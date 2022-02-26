@@ -68,5 +68,5 @@ systemctl start  tidal-watchdog.timer
 
 tidal-config.sh
 
-
+echo "Run tidal-config.sh to configure again"
 
