@@ -4,8 +4,4 @@ This should be installed on a CLEAN Raspberry Pi OS Lite 32-bit (debian Bullseye
 
 **To Install :**
 
-sudo apt --yes install curl
-
-curl -sSL https://raw.githubusercontent.com/robsterooni/tidal/master/bootstrap.sh | sudo bash
-
-
+git clone https://github.com/robsterooni/tidal && sudo ./tidal/install.sh
