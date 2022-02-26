@@ -1,12 +1,14 @@
 #!/bin/bash
 
-if [ "$EUID" -ne 0 ]
-  then echo "Please run as root"
+script=$(readlink -f $0)
+scriptPath=$(dirname $script)
+
+if [ "$EUID" -ne 0 ]; then 
+  echo "Please run as root : " 1>&2
+  echo "sudo $0" 1>&2
   exit
 fi
 
-script=$(readlink -f $0)
-scriptPath=$(dirname $script)
 
 systemctl stop tidal-devices.timer
 systemctl disable tidal-devices.timer

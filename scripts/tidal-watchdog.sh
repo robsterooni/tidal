@@ -27,6 +27,7 @@ fi
 
 configFile=/etc/tidal/config.json
 if [ ! -f $configFile ] ; then
+  echo "${configFile} NOT found" > /var/tidal/tidal-watchdog.status
   echo "<2>configFile(${configFile}) does not exist" 1>&2
   StopTidal
   exit 2
@@ -36,6 +37,7 @@ fi
 devicesFile=/var/tidal/devices.json
 if [ ! -f $devicesFile ] ; then
   echo "<6>devicesFile(${devicesFile}) does not exist, you may have no devices connected"
+  echo "no devices found" > /var/tidal/tidal-watchdog.status
   StopTidal
   exit 0
 fi
@@ -46,6 +48,7 @@ desiredPlaybackDevice=$(jq --raw-output '.playbackDevice' $configFile)
 
 while read line; do
   if [[ $line == $desiredPlaybackDevice ]]; then
+    echo "${desiredPlaybackDevice} found" > /var/tidal/tidal-watchdog.status
     StartTidal
     exit 0
   fi
@@ -53,6 +56,7 @@ done <<< "$devices"
 
 
 echo "<6>desiredPlaybackDevice($desiredPlaybackDevice) is not connected"
+echo "${desiredPlaybackDevice} NOT found" > /var/tidal/tidal-watchdog.status
 StopTidal
 
 exit 0

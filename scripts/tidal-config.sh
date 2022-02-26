@@ -14,9 +14,11 @@ trim() {
 
 Start() {
   systemctl start tidal-watchdog.timer
+  systemctl start tidal-devices.timer
 }
 
 Stop() {
+  systemctl stop tidal-devices.timer
   systemctl stop tidal-watchdog.timer
   systemctl stop tidal
 }
@@ -153,7 +155,8 @@ MainMenu() {
 
 
 if [[ $EUID -ne 0 ]]; then
-    echo "This script must be run as root" 1>&2
+    echo "This script must be run as root :" 1>&2
+    echo "sudo tidal-config.sh" 1>&2
     exit 1
 fi
 
