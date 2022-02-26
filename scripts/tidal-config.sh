@@ -81,8 +81,8 @@ Configure() {
       passthroughMQA=$passthroughMQA \
       playbackDevice="${playbackDevice}" > /etc/tidal/config.json
 
+    dialog --msgbox "Configuration written to /etc/tidal/config.json" 0 0
     Restart
-    dialog --msgbox "Configuration written to /etc/tidal/config.json and services have been restarted" 0 0
     return 0
   else
     dialog --msgbox "No devices found, configuration NOT changed" 0 0
