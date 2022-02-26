@@ -133,7 +133,7 @@ MainMenu() {
   msg+=$'Status : Services\n-----------------\n'
   watchdogStatus=$(cat /var/tidal/tidal-watchdog.status)
   msg+="Tidal                 : "$(systemctl is-active tidal.service)$'\n'
-  msg+="Tidal Watchdog        : "$(systemctl is-active tidal-watchdog.timer)" : ${watchdogStatus}"$'\n'
+  msg+="Tidal Watchdog        : "$(systemctl is-active tidal-watchdog.timer)" => ${watchdogStatus}"$'\n'
   msg+="Tidal Device Scanner  : "$(systemctl is-active tidal-devices.timer)$'\n'
   msg+=$'\n\n'
 
