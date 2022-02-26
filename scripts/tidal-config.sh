@@ -93,7 +93,7 @@ Configure() {
 
 
 MainMenu() {
-  msg=$'Status : System Information\n-----------------------------------\n'
+  msg=$'Status : System Information\n---------------------------\n'
   ip=$(hostname -I)
   msg+="IP : $ip"$'\n'
   msg+=$'\n'
