@@ -12,6 +12,22 @@ trim() {
 }
 
 
+Start() {
+  systemctl start tidal-watchdog.timer
+}
+
+Stop() {
+  systemctl stop tidal-watchdog.timer
+  systemctl stop tidal
+}
+
+Restart() {
+  Stop
+  Start
+}
+
+
+
 Configure() {
   modelName=$(dialog --stdout --inputbox "Model Name :" 0 0)
   friendlyName=$(dialog --stdout --inputbox "Friendly Name :" 0 0)
@@ -35,31 +51,43 @@ Configure() {
 
   i=0
   if [ ! -z "$devices" ]; then
-    numDevices=$(echo $devices | wc -l)
     deviceOptions=()
+    deviceArray=()
     while read line; do
+      deviceArray+=("$line")
+      deviceOptions+=("$i")
+      deviceOptions+=("$line")
+      if [ $i -eq 0 ]; then
+        deviceOptions+=("on")
+      else
+        deviceOptions+=("off")
+      fi
       ((i=i+1))
-      deviceOptions+=("$i");
-      deviceOptions+=("$line");
     done <<< "$devices"
 
-   # echo "numDevices($i), deviceOptions( ${deviceOptions[@]} )"
-   # exit 5
+    playbackDeviceIndex=$(dialog --stdout --radiolist "Playback Device :" 0 0 0 "${deviceOptions[@]}")
+    playbackDevice="${deviceArray[$playbackDeviceIndex]}"
 
-#    playbackDevice=$(dialog --stdout --menu "Playback Device :" 0 0 0 "${deviceOptions[@]}")
-    dialog --stdout --menu "Playback Device :" 0 0 0 "${deviceOptions[@]}"
-#    echo $paybackDevice;
-    echo $?
-    exit 5
+    jo -p \
+      modelName="${modelName}" \
+      friendlyName="${friendlyName}" \
+      codecMPEGH=$codecMPEGH \
+      codecMQA=$codecMQA \
+      passthroughMQA=$passthroughMQA \
+      playbackDevice="${playbackDevice}" > /etc/tidal/config.json
+
+    dialog --msgbox "Configuration written to /etc/tidal/config.json" 0 0
+    return 0
+  else
+    dialog --msgbox "No devices found, configuration NOT changed" 0 0
+    return 1
   fi
-
-  exit 3
-
 }
 
 
+
 MainMenu() {
-  msg=$'Connected Playback Devices\n--------------------------\n'
+  msg=$'Status : Connected Playback Devices\n-----------------------------------\n'
   devicesFile=/var/tidal/devices.json
   if [ -f $devicesFile ] ; then
     devices=$(jq -r '.[]' < $devicesFile)
@@ -69,7 +97,7 @@ MainMenu() {
   fi
   msg+=$'\n\n'
 
-  msg+=$'Current Configuration\n---------------------\n'
+  msg+=$'Status : Current Configuration\n------------------------------\n'
   configFile=/etc/tidal/config.json
   if [ -f $configFile ] ; then
     modelName=$(jq --raw-output '.modelName' $configFile)
@@ -85,14 +113,36 @@ MainMenu() {
     msg+="Decode MQA      : $codecMQA"$'\n'
     msg+="Passthrough MQA : $passthroughMQA"$'\n'
     msg+="Playback Device : $playbackDevice"$'\n'
+  else
+    msg+="No configuration found!"
   fi
   msg+=$'\n\n'
+#  msg+=$'Choose an Option :\n'
+
+  msg+=$'Status : Services\n-----------------------------\n'
+  
+  msg+=$'\n\n'
+
 
   result=$(dialog --stdout \
-    --default-button "no" \
-    --no-label "Refresh" \
-    --yes-label "Configure" \
-    --yesno "$msg" 0 0)
+    --backtitle "Tidal Connection Config Utility" \
+    --menu "$msg" 0 0 0 \
+    1 "Configure" \
+    2 "Start Services" \
+    3 "Restart Services" \
+    4 "Stop Services" \
+    5 "Refresh Status" \
+    6 "Exit" \
+    )
+  
+  case $result in
+	1) Configure;;
+	2) Start;;
+	3) Restart;;
+	4) Stop;;
+	5) ;;
+	6) ;;
+  esac
 
   return $result
 }
@@ -105,20 +155,14 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 
-systemctl stop tidal-watchdog.timer
-systemctl stop tidal
-
-
 
 while : ; do
   MainMenu
-
-  if [ $? -eq 0 ]; then
-    Configure
-    #break;
+  if [ $? -eq 6 ]; then
+    break;
   fi
-
 done
+clear
 
 
 
