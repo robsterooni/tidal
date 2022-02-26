@@ -93,7 +93,13 @@ Configure() {
 
 
 MainMenu() {
-  msg=$'Status : Connected Playback Devices\n-----------------------------------\n'
+  msg=$'Status : System Information\n-----------------------------------\n'
+  ip=$(hostname -I)
+  msg+="IP : $ip"$'\n'
+  msg+=$'\n'
+
+
+  msg+=$'Status : Connected Playback Devices\n-----------------------------------\n'
   devicesFile=/var/tidal/devices.json
   if [ -f $devicesFile ] ; then
     devices=$(jq -r '.[]' < $devicesFile)
