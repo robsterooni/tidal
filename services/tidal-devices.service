@@ -6,7 +6,7 @@ Wants=tidal-devices.timer
 Type=oneshot
 User=root
 
-ExecStart=/usr/bin/tidal-devices.sh
+ExecStart=/usr/bin/tidal-devices.sh > /var/tidal/devices.json
 
 [Install]
 WantedBy=multi-user.target
