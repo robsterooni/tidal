@@ -1,5 +1,5 @@
 
-This should be installed on a CLEAN Raspberry Pi OS Lite 32-bit (debian Bullseye).  This is only tested on a Pi4 with a NAD Amp and a Chord Mojo 2 - both over USB.  The headphones and HDMI outputs are disabled in the install script.
+This should be installed on a CLEAN Raspberry Pi OS Lite 32-bit (debian Bullseye).  This is tested on a Pi4 with a NAD Amp and a Chord Mojo 2 - both over USB and also the 3.5mm analog out.   I tried the HDMI output but couldnt get it to work so I have hidden it from the device list.  
 
 
 **To Install :**
