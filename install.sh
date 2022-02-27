@@ -23,7 +23,7 @@ fi
 
 apt --yes install jo jq \
   multiarch-support libavformat57 libportaudio2 libflac++6v5 \
-  libavahi-common3 libavahi-client3 alsa-utils \
+  libavahi-common3 libavahi-client3 alsa-utils dialog \
   $scriptPath/deb/*
 if [ $? -ne 0 ]; then
   echo "apt install of packages failed" 1>&2
