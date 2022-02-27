@@ -167,7 +167,7 @@ MainMenu() {
 
 if [[ $EUID -ne 0 ]]; then
     echo "This script must be run as root :" 1>&2
-    echo "sudo tidal-config.sh" 1>&2
+    echo "  sudo $0" 1>&2
     exit 1
 fi
 
@@ -180,6 +180,10 @@ while : ; do
   fi
 done
 clear
+
+echo "To run Tidal COnfiguration Utility again, run :"
+echo "  sudo $0"
+
 
 
 
