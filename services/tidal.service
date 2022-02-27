@@ -1,7 +1,6 @@
 [Unit]
 Description=Tidal Connect Service
 ConditionPathExists=/etc/tidal/config.json
-ConditionPathExists=/var/tidal/devices.json
 
 [Service]
 ExecStart=/usr/bin/tidal.sh

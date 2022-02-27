@@ -34,15 +34,7 @@ if [ ! -f $configFile ] ; then
 fi
 
 
-devicesFile=/var/tidal/devices.json
-if [ ! -f $devicesFile ] ; then
-  echo "<6>devicesFile(${devicesFile}) does not exist, you may have no devices connected"
-  echo "no devices found" > /var/tidal/tidal-watchdog.status
-  StopTidal
-  exit 0
-fi
-devices=$(jq -r '.[]' < $devicesFile)
-
+devices=$(tidal-devices.sh | jq -r '.[]')
 
 desiredPlaybackDevice=$(jq --raw-output '.playbackDevice' $configFile)
 

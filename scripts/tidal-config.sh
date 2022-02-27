@@ -14,16 +14,14 @@ trim() {
 
 Start() {
   systemctl start tidal-watchdog.timer
-  systemctl start tidal-devices.timer
-  dialog --timeout 3 --no-cancel  --pause "Starting Services" 10 0 3
+  dialog --timeout 2 --no-cancel  --pause "Starting Services" 10 0 3
 }
 
 Stop() {
-  systemctl stop tidal-devices.timer
   systemctl stop tidal-watchdog.timer
   systemctl stop tidal
   rm -f /var/tidal/tidal-watchdog.status
-  dialog --timeout 3 --no-cancel  --pause "Stopping Services" 10 0 3
+  dialog --timeout 2 --no-cancel  --pause "Stopping Services" 10 0 3
 }
 
 Restart() {
@@ -46,13 +44,9 @@ Configure() {
   dialog --stdout --default-button "no" --yesno "Passthrough MQA :" 0 0
   [[ $? = 0 ]] && passthroughMQA="true" || passthroughMQA="false"
 
-
-  devicesFile=/var/tidal/devices.json
-  devices=""
-  if [ -f $devicesFile ] ; then
-    devices=$(jq -r '.[]' < $devicesFile)
-    devices=$(trim "$devices")
-  fi
+ 
+  devices=$(tidal-devices.sh | jq -r '.[]')
+  devices=$(trim "$devices")
 
   i=0
   if [ ! -z "$devices" ]; then
@@ -99,13 +93,15 @@ MainMenu() {
   msg+=$'\n'
 
 
-  msg+=$'Status : Connected Playback Devices\n-----------------------------------\n'
-  devicesFile=/var/tidal/devices.json
-  if [ -f $devicesFile ] ; then
-    devices=$(jq -r '.[]' < $devicesFile)
-    msg+=$devices
-  else
+  msg+=$'Status : Playback Devices\n-------------------------\n'
+
+  devices=$(tidal-devices.sh | jq -r '.[]')
+  devices=$(trim "$devices")
+
+  if [ -z "$devices" ] ; then
     msg+="No devices found!"$'\n'
+  else
+    msg+=$devices
   fi
   msg+=$'\n\n'
 
@@ -134,7 +130,6 @@ MainMenu() {
   watchdogStatus=$(cat /var/tidal/tidal-watchdog.status)
   msg+="Tidal                 : "$(systemctl is-active tidal.service)$'\n'
   msg+="Tidal Watchdog        : "$(systemctl is-active tidal-watchdog.timer)$'\n'
-  msg+="Tidal Device Scanner  : "$(systemctl is-active tidal-devices.timer)$'\n'  
   msg+="Tidal Status          : ${watchdogStatus}"$'\n'
   msg+=$'\n\n'
 

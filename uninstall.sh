@@ -10,9 +10,6 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 
-systemctl stop tidal-devices.timer
-systemctl disable tidal-devices.timer
-
 systemctl stop tidal-watchdog.timer
 systemctl disable tidal-watchdog.timer
 

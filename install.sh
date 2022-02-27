@@ -60,9 +60,6 @@ mkdir -p /var/tidal
 
 systemctl daemon-reload
 
-systemctl enable tidal-devices.timer
-systemctl start  tidal-devices.timer
-
 systemctl enable tidal-watchdog.timer
 systemctl start  tidal-watchdog.timer
 
