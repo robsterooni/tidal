@@ -21,7 +21,9 @@ while read line; do
     if [ "$name1" = "bcm2835 Headphones" ]; then
       name2="-"
     fi
-    devices+="${name1}: ${name2} (hw:${card},0)"$'\n'
+    if [[ $name1 != vc4-hdmi* ]]; then
+      devices+="${name1}: ${name2} (hw:${card},0)"$'\n'
+    fi
   fi
 done <<< "$rawDevices"
 
