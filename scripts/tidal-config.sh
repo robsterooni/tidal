@@ -181,7 +181,7 @@ while : ; do
 done
 clear
 
-echo "To run Tidal COnfiguration Utility again, run :"
+echo "To run Tidal Configuration Utility again, run :"
 echo "  sudo $0"
 
 
