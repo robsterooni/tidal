@@ -34,21 +34,23 @@ if [ ! -f $configFile ] ; then
 fi
 
 
-devices=$(tidal-devices.sh | jq -r '.[]')
+devices=$(tidal-devices-hw.sh | jq -r '.[]')
 
 desiredPlaybackDevice=$(jq --raw-output '.playbackDevice' $configFile)
+desiredPlaybackDevice=$(echo "$desiredPlaybackDevice" | awk '{split($0,a,":"); print a[1];}')
+echo "${desiredPlaybackDevice}"
 
 while read line; do
   if [[ $line == $desiredPlaybackDevice ]]; then
-    echo "${desiredPlaybackDevice} found" > /var/tidal/tidal-watchdog.status
+    echo "[${desiredPlaybackDevice}] found" > /var/tidal/tidal-watchdog.status
     StartTidal
     exit 0
   fi
 done <<< "$devices"
 
 
-echo "<6>desiredPlaybackDevice($desiredPlaybackDevice) is not connected"
-echo "${desiredPlaybackDevice} NOT found" > /var/tidal/tidal-watchdog.status
+echo "<6>[$desiredPlaybackDevice] is not connected"
+echo "[${desiredPlaybackDevice}] NOT found" > /var/tidal/tidal-watchdog.status
 StopTidal
 
 exit 0

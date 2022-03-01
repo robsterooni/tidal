@@ -33,8 +33,10 @@ Restart() {
 
 
 Configure() {
+  Stop
 
-  devices=$(tidal-devices.sh | jq -r '.[]')
+#  devices=$(tidal-devices.sh | jq -r '.[]')
+  devices=$(tidal-devices-ifi.sh | jq -r '.[]')
   devices=$(trim "$devices")
 
   i=0
@@ -82,7 +84,7 @@ Configure() {
 
   dialog --msgbox "Configuration written to /etc/tidal/config.json" 0 0
 
-  Restart
+  Start
   return 0
 }
 
@@ -111,7 +113,6 @@ MainMenu() {
   fi
   msg+=$'\n'
 
-#  msg+=$'Status : Services\n-----------------\n'
   watchdogStatus=$(cat /var/tidal/tidal-watchdog.status)
   msg+="Tidal           : "$(systemctl is-active tidal.service)$'\n'
   msg+="Tidal Watchdog  : "$(systemctl is-active tidal-watchdog.timer)$'\n'
