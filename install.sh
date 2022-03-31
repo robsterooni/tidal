@@ -63,8 +63,8 @@ mkdir -p /var/tidal
 
 systemctl daemon-reload
 
-systemctl enable tidal-watchdog.timer
-systemctl start  tidal-watchdog.timer
+systemctl enable tidal-watchdog
+systemctl start  tidal-watchdog
 
 tidal-config.sh
 

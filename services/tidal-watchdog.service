@@ -1,18 +1,11 @@
 [Unit]
 Description=Tidal Connect Watchdog services. Stops and starts tidal when device is connected/disconnected
-Wants=tidal-watchdog.timer
 
 [Service]
-Type=oneshot
+Type=simple
 User=root
-
+LogLevelMax=4
 ExecStart=/usr/bin/tidal-watchdog.sh
 
 [Install]
 WantedBy=multi-user.target
-
-
-
-
-
-

@@ -13,13 +13,12 @@ trim() {
 
 
 Start() {
-  systemctl start tidal-watchdog.timer
+  systemctl start tidal-watchdog
   dialog --timeout 2 --no-cancel  --pause "Starting Services" 10 0 2
 }
 
 Stop() {
-  systemctl stop tidal-watchdog.timer
-  systemctl stop tidal-watchdog.service
+  systemctl stop tidal-watchdog
   systemctl stop tidal
   rm -f /var/tidal/tidal-watchdog.status
   dialog --timeout 2 --no-cancel  --pause "Stopping Services" 10 0 2
@@ -115,7 +114,7 @@ MainMenu() {
 
   watchdogStatus=$(cat /var/tidal/tidal-watchdog.status)
   msg+="Tidal           : "$(systemctl is-active tidal.service)$'\n'
-  msg+="Tidal Watchdog  : "$(systemctl is-active tidal-watchdog.timer)$'\n'
+  msg+="Tidal Watchdog  : "$(systemctl is-active tidal-watchdog)$'\n'
   msg+="Tidal Status    : ${watchdogStatus}"$'\n'
   msg+=$'\n\n'
 

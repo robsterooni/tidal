@@ -10,10 +10,9 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 
-systemctl stop tidal-watchdog.timer
-systemctl disable tidal-watchdog.timer
-
-systemctl stop tidal.service
+systemctl stop    tidal-watchdog
+systemctl disable tidal-watchdog
+systemctl stop    tidal
 
 
 # add old stretch repo for old debs
