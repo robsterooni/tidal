@@ -33,7 +33,7 @@ echo "<6>config : playbackDevice($playbackDevice)"
   --model-name "$modelName" \
   --disable-app-security false \
   --disable-web-security false \
-  --enable-mqa-passthrough true \
+  --enable-mqa-passthrough $passthroughMQA \
   --log-level 3 \
   --enable-websocket-log "0" \
   --playback-device "$playbackDevice"
