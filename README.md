@@ -4,4 +4,6 @@ This should be installed on a CLEAN Raspberry Pi OS Lite 32-bit (debian Bullseye
 
 **To Install :**
 
-git clone https://github.com/robsterooni/tidal && sudo ./tidal/install.sh
+sudo apt --yes install git
+git clone https://github.com/robsterooni/tidal
+sudo ./tidal/install.sh
