@@ -12,17 +12,43 @@ trim() {
 }
 
 
+
+DialogOption() {
+  options=()
+  choices=("$@")
+
+  i=0
+  for choice in "${choices[@]}"; do
+    options+=("$i")
+    options+=("$choice")
+    if [ $i -eq 0 ]; then
+      options+=("on")
+    else
+      options+=("off")
+    fi
+    ((i=i+1))
+  done
+
+  index=$(dialog --stdout --no-cancel --no-tags --no-collapse --radiolist "Choose :" 0 0 0 "${options[@]}")
+  echo "${choices[$index]}"
+}
+
+
 Start() {
-  systemctl start tidal-watchdog
+  systemctl --quiet enable tidal-watchdog
+  systemctl --quiet start tidal-watchdog
   dialog --timeout 2 --no-cancel  --pause "Starting Services" 10 0 2
 }
 
+
 Stop() {
-  systemctl stop tidal-watchdog
-  systemctl stop tidal
+  systemctl --quiet disable tidal-watchdog
+  systemctl --quiet stop tidal-watchdog
+  systemctl --quiet stop tidal
   rm -f /var/tidal/tidal-watchdog.status
   dialog --timeout 2 --no-cancel  --pause "Stopping Services" 10 0 2
 }
+
 
 Restart() {
   Stop
@@ -32,37 +58,7 @@ Restart() {
 
 
 Configure() {
-  Stop
-
-#  devices=$(tidal-devices.sh | jq -r '.[]')
-  devices=$(tidal-devices-ifi.sh | jq -r '.[]')
-  devices=$(trim "$devices")
-
-  i=0
-  if [ ! -z "$devices" ]; then
-    deviceOptions=()
-    deviceArray=()
-    while read line; do
-      deviceArray+=("$line")
-      deviceOptions+=("$i")
-      deviceOptions+=("$line")
-      if [ $i -eq 0 ]; then
-        deviceOptions+=("on")
-      else
-        deviceOptions+=("off")
-      fi
-      ((i=i+1))
-    done <<< "$devices"
-
-    playbackDeviceIndex=$(dialog --stdout --no-cancel --no-tags --no-collapse --radiolist "Playback Device :" 0 0 0 "${deviceOptions[@]}")
-    playbackDevice="${deviceArray[$playbackDeviceIndex]}"
-  else
-    dialog --msgbox "No devices found, configuration NOT changed" 0 0
-    return 1
-  fi
-
-  modelName=$(dialog --stdout --no-cancel --inputbox "Model Name :" 0 0)
-  friendlyName=$(dialog --stdout --no-cancel --inputbox "Friendly Name :" 0 0)
+  name=$(dialog --stdout --no-cancel --inputbox "Name :" 0 0)
 
   dialog --stdout --yesno "Decode MPEGH :" 0 0
   [[ $? = 0 ]] && codecMPEGH="true" || codecMPEGH="false"
@@ -74,18 +70,43 @@ Configure() {
   [[ $? = 0 ]] && passthroughMQA="true" || passthroughMQA="false"
 
   jo -p \
-    modelName="${modelName}" \
-    friendlyName="${friendlyName}" \
+    name="${name}" \
     codecMPEGH=$codecMPEGH \
     codecMQA=$codecMQA \
     passthroughMQA=$passthroughMQA \
-    playbackDevice="${playbackDevice}" > /etc/tidal/config.json
+    > /etc/tidal/config.json
 
-  dialog --msgbox "Configuration written to /etc/tidal/config.json" 0 0
+  cardFolders=$(ls -d /proc/asound/* | grep -e '/proc/asound/card[0-9]')
+  cards=()
+  for card in $cardFolders; do
+    cards+=($(cat $card/id))
+  done
+  card=$(DialogOption ${cards[@]})
 
-  Start
+  mv /etc/asound.conf /etc/asound.conf.tmp
+  formats_raw=$(aplay -D hw:${card},0 /dev/zero --dump-hw-params -s 1  2>&1 | grep -e "^FORMAT:" | cut -f2 -d ":")
+  mv /etc/asound.conf.tmp /etc/asound.conf
+
+  formats_raw=$(trim $formats_raw)
+  formats=()
+  for f in $formats_raw; do
+    formats+=($f)
+  done
+  format=$(DialogOption ${formats[@]})
+
+  cat << EOF > /etc/asound.conf
+pcm.!default {
+  type plug
+  slave {
+    pcm "hw:${card},0"
+    format ${format}
+  }
+}
+EOF
+
   return 0
 }
+
 
 
 
@@ -95,18 +116,15 @@ MainMenu() {
   msg=""
   configFile=/etc/tidal/config.json
   if [ -f $configFile ] ; then
-    modelName=$(jq --raw-output '.modelName' $configFile)
-    friendlyName=$(jq --raw-output '.friendlyName' $configFile)
+    name=$(jq --raw-output '.name' $configFile)
     codecMPEGH=$(jq --raw-output '.codecMPEGH' $configFile)
     codecMQA=$(jq --raw-output '.codecMQA' $configFile)
     passthroughMQA=$(jq --raw-output '.passthroughMQA' $configFile)
-    playbackDevice=$(jq --raw-output '.playbackDevice' $configFile)
 
-    msg+="Name            : $modelName / $friendlyName"$'\n'
+    msg+="Name            : $name"$'\n'
     msg+="Decode MPEGH    : $codecMPEGH"$'\n'
     msg+="Decode MQA      : $codecMQA"$'\n'
     msg+="Passthrough MQA : $passthroughMQA"$'\n'
-    msg+="Playback Device : $playbackDevice"$'\n'
   else
     msg+="No configuration found!"$'\n'
   fi

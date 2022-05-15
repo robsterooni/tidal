@@ -32,10 +32,10 @@ fi
 
 
 # blacklist 3.5mm analogue output
-cat << EOF > /etc/modprobe.d/blacklist-snd_bcm2835.conf
-blacklist snd_bcm2835
-EOF
-modprobe --remove snd_bcm2835
+#cat << EOF > /etc/modprobe.d/blacklist-snd_bcm2835.conf
+#blacklist snd_bcm2835
+#EOF
+#modprobe --remove snd_bcm2835
 
 # blacklist HDMI audio out
 #cat << EOF > /etc/modprobe.d/blacklist-vc4.conf
@@ -62,9 +62,6 @@ cp $scriptPath/scripts/* /usr/bin/
 mkdir -p /var/tidal
 
 systemctl daemon-reload
-
-systemctl enable tidal-watchdog
-systemctl start  tidal-watchdog
 
 tidal-config.sh
 

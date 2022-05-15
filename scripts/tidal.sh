@@ -10,38 +10,27 @@ if [ ! -f $configFile ]; then
     exit 8
 fi
 
-modelName=$(jq --raw-output '.modelName' $configFile)
-friendlyName=$(jq --raw-output '.friendlyName' $configFile)
+name=$(jq --raw-output '.name' $configFile)
 codecMPEGH=$(jq --raw-output '.codecMPEGH' $configFile)
 codecMQA=$(jq --raw-output '.codecMQA' $configFile)
 passthroughMQA=$(jq --raw-output '.passthroughMQA' $configFile)
-playbackDevice=$(jq --raw-output '.playbackDevice' $configFile)
 
 
-echo "<6>config : modelName($modelName)"
-echo "<6>config : friendlyName($friendlyName)"
+echo "<6>config : name($name)"
 echo "<6>config : codecMPEGH($codecMPEGH)"
 echo "<6>config : codecMQA($codecMQA)"
 echo "<6>config : passthroughMQA($passthroughMQA)"
-echo "<6>config : playbackDevice($playbackDevice)"
 
 /usr/ifi/ifi-tidal-release/bin/tidal_connect_application \
   --tc-certificate-path "/usr/ifi/ifi-tidal-release/id_certificate/IfiAudio_ZenStream.dat" \
-  --friendly-name "$friendlyName" \
+  --friendly-name "$name" \
   --codec-mpegh $codecMPEGH \
   --codec-mqa $codecMQA \
-  --model-name "$modelName" \
+  --model-name "$name" \
   --disable-app-security false \
   --disable-web-security false \
   --enable-mqa-passthrough $passthroughMQA \
   --log-level 3 \
   --enable-websocket-log "0" \
-  --playback-device "$playbackDevice"
-
-
-
-
-
-
-
+  --playback-device "default"
 
