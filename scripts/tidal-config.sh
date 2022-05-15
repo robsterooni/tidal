@@ -35,18 +35,14 @@ DialogOption() {
 
 
 Start() {
-  systemctl --quiet enable tidal-watchdog
-  systemctl --quiet start tidal-watchdog
-  dialog --timeout 2 --no-cancel  --pause "Starting Services" 10 0 2
+  systemctl --quiet enable tidal
+  systemctl --quiet start tidal
 }
 
 
 Stop() {
-  systemctl --quiet disable tidal-watchdog
-  systemctl --quiet stop tidal-watchdog
   systemctl --quiet stop tidal
-  rm -f /var/tidal/tidal-watchdog.status
-  dialog --timeout 2 --no-cancel  --pause "Stopping Services" 10 0 2
+  systemctl --quiet disable tidal
 }
 
 
@@ -58,6 +54,7 @@ Restart() {
 
 
 Configure() {
+
   name=$(dialog --stdout --no-cancel --inputbox "Name :" 0 0)
 
   dialog --stdout --yesno "Decode MPEGH :" 0 0
@@ -94,6 +91,7 @@ Configure() {
   done
   format=$(DialogOption ${formats[@]})
 
+  mv /etc/asound.conf /etc/asound.conf.bak_$(date --iso-8601=seconds)
   cat << EOF > /etc/asound.conf
 pcm.!default {
   type plug
@@ -128,14 +126,13 @@ MainMenu() {
   else
     msg+="No configuration found!"$'\n'
   fi
+
+  active=$(systemctl is-active tidal.service)
+  enabled=$(systemctl is-enabled tidal.service)
+  msg+="Tidal Service   : ${active} / ${enabled} "$'\n'
   msg+=$'\n'
-
-  watchdogStatus=$(cat /var/tidal/tidal-watchdog.status)
-  msg+="Tidal           : "$(systemctl is-active tidal.service)$'\n'
-  msg+="Tidal Watchdog  : "$(systemctl is-active tidal-watchdog)$'\n'
-  msg+="Tidal Status    : ${watchdogStatus}"$'\n'
-  msg+=$'\n\n'
-
+  msg+="ALSA config (/etc/asound.conf) : "$'\n'
+  msg+=$(cat /etc/asound.conf)
 
   result=$(dialog --stdout \
     --backtitle "IP(${ip}) : Tidal Connect Configuration Utility" \

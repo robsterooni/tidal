@@ -10,31 +10,20 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 
-systemctl stop    tidal-watchdog
-systemctl disable tidal-watchdog
 systemctl stop    tidal
+systemctl disable tidal
 
 
 # add old stretch repo for old debs
 rm /etc/apt/sources.list.d/stretch.list
 apt update
 
-#apt --yes purge multiarch-support libavformat57 libportaudio2 libflac++6v5 libavahi-common3 libavahi-client3 alsa-utils
-#apt --yes purge $scriptPath/deb/*
-#apt --yes autoremove
-
-# blacklist 3.5mm analogue output
-#rm /etc/modprobe.d/blacklist-snd_bcm2835.conf
-
-# blacklist HDMI audio out
-#rm /etc/modprobe.d/blacklist-vc4.conf
 
 # rm proggy files
 rm -rf /usr/ifi
 rm /lib/systemd/system/tidal*
 rm /usr/bin/tidal*
 rm -rf /etc/tidal
-rm -rf /var/tidal
 
 
 
