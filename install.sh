@@ -40,6 +40,8 @@ cp $scriptPath/services/* /lib/systemd/system/
 
 # copy config file
 mkdir -p /etc/tidal
+mkdir -p /etc/alsa/conf.d
+mkdir -p /etc/alsa/conf.d.backup
 
 # copy scripts
 cp $scriptPath/scripts/* /usr/bin/

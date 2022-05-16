@@ -24,6 +24,7 @@ rm -rf /usr/ifi
 rm /lib/systemd/system/tidal*
 rm /usr/bin/tidal*
 rm -rf /etc/tidal
+rm -f /etc/alsa/conf.d/*tidal*.conf
 
 
 
