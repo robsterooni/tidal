@@ -9,9 +9,12 @@ if [ "$EUID" -ne 0 ]; then
   exit
 fi
 
+
+    
 # add old stretch repo for old debs
 cat << EOF > /etc/apt/sources.list.d/stretch.list
-deb [trusted=yes] http://archive.raspbian.org/raspbian stretch main
+deb [trusted=yes] http://archive.raspberrypi.org/debian/ stretch main
+deb [trusted=yes] http://legacy.raspbian.org/raspbian stretch main contrib non-free rpi firmware
 EOF
 
 apt update
