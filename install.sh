@@ -11,7 +11,7 @@ fi
 
 # add old stretch repo for old debs
 cat << EOF > /etc/apt/sources.list.d/stretch.list
-deb http://archive.raspbian.org/raspbian stretch main
+deb [trusted=yes] http://archive.raspbian.org/raspbian stretch main
 EOF
 
 apt update
